@@ -1,0 +1,41 @@
+-- ============================================
+-- SỬ DỤNG DATABASE QUẢN LÝ SINH VIÊN
+-- ============================================
+USE QuanLySinhVien;
+
+-- ============================================
+-- TRUY VẤN 1: Số lượng sinh viên ở từng nơi
+-- ============================================
+SELECT Address, COUNT(StudentId) AS 'Số lượng học viên'
+FROM Student
+GROUP BY Address;
+
+-- ============================================
+-- TRUY VẤN 2: Điểm trung bình các môn của mỗi học viên
+-- ============================================
+SELECT S.StudentId, S.StudentName, AVG(Mark) AS 'Điểm trung bình'
+FROM Student S 
+JOIN Mark M ON S.StudentId = M.StudentId
+GROUP BY S.StudentId, S.StudentName;
+
+-- ============================================
+-- TRUY VẤN 3: Học viên có điểm TB > 15
+-- ============================================
+SELECT S.StudentId, S.StudentName, AVG(Mark) AS 'Điểm trung bình'
+FROM Student S 
+JOIN Mark M ON S.StudentId = M.StudentId
+GROUP BY S.StudentId, S.StudentName
+HAVING AVG(Mark) > 15;
+
+-- ============================================
+-- TRUY VẤN 4: Học viên có điểm TB lớn nhất
+-- ============================================
+SELECT S.StudentId, S.StudentName, AVG(Mark) AS 'Điểm trung bình'
+FROM Student S 
+JOIN Mark M ON S.StudentId = M.StudentId
+GROUP BY S.StudentId, S.StudentName
+HAVING AVG(Mark) >= ALL (
+    SELECT AVG(Mark) 
+    FROM Mark 
+    GROUP BY Mark.StudentId
+);
